@@ -11,7 +11,16 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
       allowedHosts: true,
     },
-    plugins: [react()],
+    plugins: [
+      react(),
+      {
+        name: 'strip-crossorigin-from-generated-assets',
+        transformIndexHtml(html) {
+          // Prevent browsers from treating same-origin bundle files as CORS requests.
+          return html.replace(/\s+crossorigin(?=(\s|>))/g, '');
+        },
+      },
+    ],
     define: {
       'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)

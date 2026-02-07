@@ -21,6 +21,7 @@ export function validateEnv(): void {
 
   if (import.meta.env.PROD && !appConfig.features.useDatabase && !appConfig.features.allowProdMockMode) {
     errors.push('Production runtime cannot use mock mode. Configure Supabase env vars or set VITE_ALLOW_PROD_MOCK_MODE=true for intentional demo deployments.');
+    errors.push('Vite injects VITE_* variables at build time. After changing Vercel env vars, trigger a new deployment.');
   }
 
   if (appConfig.payment.enableMoyasar && !import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY) {

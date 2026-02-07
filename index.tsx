@@ -26,26 +26,31 @@ function renderStartupError(message: string): void {
   `;
 }
 
+let envValid = true;
+
 try {
   validateEnv();
 } catch (error) {
+  envValid = false;
   const message = error instanceof Error ? error.message : 'Unknown startup error';
   console.error('Environment validation failed during startup:', error);
   renderStartupError(message);
 }
 
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
-}
+if (envValid) {
+  const rootElement = document.getElementById('root');
+  if (!rootElement) {
+    throw new Error("Could not find root element to mount to");
+  }
 
-const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <GlobalErrorBoundary>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </GlobalErrorBoundary>
-  </React.StrictMode>
-);
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <GlobalErrorBoundary>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </GlobalErrorBoundary>
+    </React.StrictMode>
+  );
+}

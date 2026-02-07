@@ -38,7 +38,13 @@ WHERE n.nspname = 'public'
     'reject_payment_submission',
     'order_status_transition_is_valid',
     'enforce_order_status_transition',
-    'assign_custom_request'
+    'assign_custom_request',
+    'log_admin_action',
+    'audit_user_changes',
+    'audit_product_changes',
+    'audit_order_changes',
+    'admin_update_user_sensitive_fields',
+    'prune_old_login_attempts'
   )
 ORDER BY p.proname, arguments;
 
@@ -232,13 +238,13 @@ SELECT
 FROM public._migration_log
 ORDER BY applied_at;
 
--- Expected: 28 migrations listed in chronological order
+-- Expected: 31 migrations listed in chronological order
 
 SELECT
   COUNT(*) AS total_migrations_applied
 FROM public._migration_log;
 
--- Expected: 28
+-- Expected: 31
 
 -- ============================================================================
 -- 9. INVOICE SEQUENCE VERIFICATION
@@ -275,6 +281,74 @@ ORDER BY e.enumsortorder;
 -- PENDING_PO, CONFIRMED, PENDING_PAYMENT, AWAITING_CONFIRMATION, PAYMENT_CONFIRMED,
 -- PROCESSING, READY_FOR_PICKUP, PICKUP_SCHEDULED, OUT_FOR_DELIVERY, SHIPPED,
 -- IN_TRANSIT, DELIVERED, CANCELLED
+
+-- ============================================================================
+-- 11. ADMIN AUDIT LOG VERIFICATION
+-- ============================================================================
+
+SELECT
+  '=== ADMIN AUDIT LOG ===' AS section;
+
+SELECT EXISTS (
+  SELECT 1
+  FROM information_schema.tables
+  WHERE table_schema = 'public'
+    AND table_name = 'admin_audit_log'
+) AS admin_audit_table_exists;
+
+-- Expected: true
+
+-- Check audit triggers exist
+SELECT
+  tgname AS trigger_name,
+  tgrelid::regclass AS table_name
+FROM pg_trigger
+WHERE tgname IN (
+  'trg_audit_user_changes',
+  'trg_audit_product_changes',
+  'trg_audit_order_changes'
+)
+AND NOT tgisinternal
+ORDER BY tgname;
+
+-- Expected: 3 rows (user, product, order audit triggers)
+
+-- ============================================================================
+-- 12. LOGIN ATTEMPTS TABLE VERIFICATION (for auth-rate-limit edge function)
+-- ============================================================================
+
+SELECT
+  '=== LOGIN ATTEMPTS TABLE ===' AS section;
+
+SELECT EXISTS (
+  SELECT 1
+  FROM information_schema.tables
+  WHERE table_schema = 'public'
+    AND table_name = 'login_attempts'
+) AS login_attempts_table_exists;
+
+-- Expected: true
+
+-- ============================================================================
+-- 13. DECIMAL PRECISION VERIFICATION
+-- ============================================================================
+
+SELECT
+  '=== DECIMAL PRECISION CHECK ===' AS section;
+
+SELECT
+  table_name,
+  column_name,
+  data_type,
+  numeric_precision,
+  numeric_scale
+FROM information_schema.columns
+WHERE table_schema = 'public'
+  AND data_type = 'numeric'
+  AND table_name IN ('users', 'products', 'quotes', 'orders', 'payments', 'invoices', 'refunds')
+ORDER BY table_name, column_name;
+
+-- Expected: All monetary columns should be numeric(12,2), rating should be numeric(3,2)
 
 -- ============================================================================
 -- VERIFICATION COMPLETE

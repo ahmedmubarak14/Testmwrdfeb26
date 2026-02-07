@@ -1,0 +1,5 @@
+{
+  "name": "MWRD M1 - Managed B2B Marketplace",
+  "description": "A managed B2B marketplace connecting clients and suppliers anonymously, featuring separate portals for clients, suppliers, and administrators with RFQ workflows, margin management, and product approvals.",
+  "requestFramePermissions": []
+}

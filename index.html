@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Security Headers -->
+  <!-- Content Security Policy - Prevents XSS attacks -->
+  <meta http-equiv="Content-Security-Policy" 
+        content="default-src 'self'; 
+                 script-src 'self' https://cdn.jsdelivr.net; 
+                 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+                 font-src 'self' https://fonts.gstatic.com; 
+                 img-src 'self' data: https: blob:; 
+                 connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.moyasar.com;
+                 frame-ancestors 'none';
+                 base-uri 'self';
+                 form-action 'self';">
+  
+  <!-- Prevent clickjacking -->
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  
+  <!-- Prevent MIME type sniffing -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  
+  <!-- Referrer Policy - Don't leak URLs to external sites -->
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  
+  <title>mwrd | Managed B2B Marketplace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+
+<body class="bg-gray-50 text-gray-900 antialiased">
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>

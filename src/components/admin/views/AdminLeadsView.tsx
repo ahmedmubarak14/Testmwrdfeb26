@@ -18,7 +18,7 @@ export const AdminLeadsView: React.FC = () => {
       setLeads(data);
     } catch (error) {
       logger.error('Failed to load leads', error);
-      toast.error('Failed to load leads');
+      toast.error(t('admin.leads.loadError'));
     } finally {
       setLoading(false);
     }
@@ -31,7 +31,7 @@ export const AdminLeadsView: React.FC = () => {
   const handleStatusChange = async (id: string, status: NonNullable<Lead['status']>) => {
     await leadsService.updateLeadStatus(id, status);
     loadLeads();
-    toast.success('Status updated');
+    toast.success(t('admin.leads.statusUpdated'));
   };
 
   return (
@@ -90,7 +90,9 @@ export const AdminLeadsView: React.FC = () => {
                   <td className="px-6 py-4">
                     <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium uppercase ${lead.account_type === 'supplier' ? 'bg-purple-50 text-purple-700' : 'bg-blue-50 text-blue-700'
                       }`}>
-                      {lead.account_type}
+                      {lead.account_type === 'supplier'
+                        ? t('admin.leads.typeSupplier')
+                        : t('admin.leads.typeClient')}
                     </span>
                   </td>
                   <td className="px-6 py-4">

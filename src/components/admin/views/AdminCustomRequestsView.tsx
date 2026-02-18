@@ -9,10 +9,6 @@ import {
   assignCustomRequestToSupplier,
   updateAdminNotes,
   rejectCustomRequest,
-  getRequestStatusText,
-  getStatusColorClass,
-  getPriorityText,
-  getPriorityColorClass,
   getCustomRequestStats,
 } from '../../../services/customItemRequestService';
 import { logger } from '../../../utils/logger';
@@ -327,6 +323,31 @@ export const AdminCustomRequestsView: React.FC = () => {
     return colors[priority] || 'bg-gray-100 text-gray-700';
   };
 
+  const getLocalizedStatusText = (status: string) => {
+    const keyByStatus: Record<string, string> = {
+      PENDING: 'admin.customRequests.statusPending',
+      UNDER_REVIEW: 'admin.customRequests.statusUnderReview',
+      ASSIGNED: 'admin.customRequests.statusAssigned',
+      QUOTED: 'admin.customRequests.statusQuoted',
+      APPROVED: 'admin.customRequests.statusApproved',
+      REJECTED: 'admin.customRequests.statusRejected',
+      CANCELLED: 'admin.customRequests.statusCancelled',
+    };
+
+    return t(keyByStatus[status] || status);
+  };
+
+  const getLocalizedPriorityText = (priority: string) => {
+    const keyByPriority: Record<string, string> = {
+      LOW: 'admin.customRequests.priorityLow',
+      MEDIUM: 'admin.customRequests.priorityMedium',
+      HIGH: 'admin.customRequests.priorityHigh',
+      URGENT: 'admin.customRequests.priorityUrgent',
+    };
+
+    return t(keyByPriority[priority] || priority);
+  };
+
   const resolveAttachmentUrl = (value: string): string => {
     if (!value) return '#';
     if (value.startsWith('http://') || value.startsWith('https://')) {
@@ -388,7 +409,7 @@ export const AdminCustomRequestsView: React.FC = () => {
                 : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
             }`}
           >
-            {status === 'ALL' ? t('common.all') : status.replace(/_/g, ' ')}
+            {status === 'ALL' ? t('common.all') : getLocalizedStatusText(status)}
           </button>
         ))}
       </div>
@@ -435,12 +456,12 @@ export const AdminCustomRequestsView: React.FC = () => {
                   </td>
                   <td className="px-6 py-4">
                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${getPriorityColor(req.priority)}`}>
-                      {req.priority}
+                      {getLocalizedPriorityText(req.priority)}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${getStatusColor(req.status)}`}>
-                      {req.status.replace(/_/g, ' ')}
+                      {getLocalizedStatusText(req.status)}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-gray-600 text-sm">
@@ -561,14 +582,14 @@ export const AdminCustomRequestsView: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.priority')}</p>
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${getPriorityColorClass(selectedRequest.priority as any)}`}>
-                    {getPriorityText(selectedRequest.priority as any)}
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${getPriorityColor(selectedRequest.priority)}`}>
+                    {getLocalizedPriorityText(selectedRequest.priority)}
                   </span>
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.status')}</p>
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${getStatusColorClass(selectedRequest.status as any)}`}>
-                    {getRequestStatusText(selectedRequest.status as any)}
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${getStatusColor(selectedRequest.status)}`}>
+                    {getLocalizedStatusText(selectedRequest.status)}
                   </span>
                 </div>
                 <div>

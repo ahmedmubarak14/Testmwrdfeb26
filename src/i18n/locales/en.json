@@ -98,6 +98,7 @@
     "showing": "Showing",
     "of": "of",
     "products": "products",
+    "product": "Product",
     "previousPage": "Previous page is not available yet",
     "nextPage": "Next page is not available yet",
     "category": "Category",
@@ -1128,7 +1129,9 @@
       "unknownClient": "Unknown Client",
       "revenueByCategory": "Revenue by Category",
       "topSellingProducts": "Top Selling Products",
-      "noOrders": "No orders found"
+      "noOrders": "No orders found",
+      "sold": "Sold",
+      "revenue": "Revenue"
     },
     "approvals": {
       "title": "Approvals",
@@ -1607,7 +1610,9 @@
       "contacted": "Contacted",
       "converted": "Converted",
       "rejected": "Rejected",
-      "subtitle": "Review landing-page interest form submissions"
+      "subtitle": "Review landing-page interest form submissions",
+      "typeSupplier": "Supplier",
+      "typeClient": "Client"
     },
     "customRequests": {
       "title": "Custom Item Requests",
@@ -1660,7 +1665,18 @@
       "rejectReasonPlaceholder": "Enter rejection reason...",
       "confirmReject": "Reject Request",
       "notesFor": "Notes for:",
-      "notesPlaceholder": "Add internal notes about this request..."
+      "notesPlaceholder": "Add internal notes about this request...",
+      "statusPending": "Pending",
+      "statusUnderReview": "Under Review",
+      "statusAssigned": "Assigned",
+      "statusQuoted": "Quoted",
+      "statusApproved": "Approved",
+      "statusRejected": "Rejected",
+      "statusCancelled": "Cancelled",
+      "priorityLow": "Low",
+      "priorityMedium": "Medium",
+      "priorityHigh": "High",
+      "priorityUrgent": "Urgent"
     },
     "orders": {
       "title": "Order Management",

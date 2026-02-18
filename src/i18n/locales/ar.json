@@ -103,7 +103,7 @@
     "nextPage": "Next page is not available yet",
     "category": "Category",
     "apply": "Apply",
-    "days": "days"
+    "days": "أيام"
   },
   "about": {
     "clients": {
@@ -725,6 +725,7 @@
       "transactionsPrimary": "المعاملات",
       "transactionsPrimaryHint": "يتم احتساب الطلبات المسلمة كمعاملات مكتملة.",
       "pendingPayouts": "مدفوعات معلقة",
+      "pendingPayoutHint": "المدفوعات قيد المعالجة حالياً.",
       "pendingPayoutOrders": "{{count}} طلب مُسلّم ضمن نافذة السداد",
       "ratingAndOrders": "التقييم والطلبات",
       "ordersCount": "{{count}} إجمالي الطلبات",
@@ -815,8 +816,8 @@
       "bulkUploadCreated": "تم استيراد {{count}} منتج بنجاح",
       "bulkUploadPartialFailure": "فشل استيراد {{count}} منتج",
       "pricePositiveRequired": "يجب أن يكون سعر المورد أكبر من 0",
-      "loadError": "Failed to refresh products",
-      "selectCategory": "Select Category"
+      "loadError": "فشل تحديث المنتجات",
+      "selectCategory": "اختر الفئة"
     },
     "rfqs": {
       "title": "طلبات العروض المستلمة",
@@ -874,12 +875,12 @@
       "partialQuoteAllowed": "العروض الجزئية مسموحة. ستظهر الأصناف غير المسعّرة على أنها غير مُسعّرة.",
       "atLeastOneItemRequired": "قم بتسعير صنف واحد على الأقل مع سعر الوحدة ومدة التسليم.",
       "invalidItemValues": "يجب أن تحتوي بنود عرض السعر على كمية وسعر صالحين.",
-      "suggestAlternative": "Suggest an alternative product",
-      "smartMatch": "✨ Smart Match",
-      "searchCatalog": "Search master catalog or type a custom name...",
-      "catalogMatches": "Catalog Matches",
-      "quoteValidity": "Quote Validity Period",
-      "validityHelp": "How long this quote remains valid for the client"
+      "suggestAlternative": "اقتراح منتج بديل",
+      "smartMatch": "مطابقة ذكية ✨",
+      "searchCatalog": "ابحث في الفهرس الرئيسي أو اكتب اسماً مخصصاً...",
+      "catalogMatches": "نتائج الفهرس المطابقة",
+      "quoteValidity": "مدة صلاحية عرض السعر",
+      "validityHelp": "المدة التي يظل فيها هذا العرض صالحاً للعميل"
     },
     "orders": {
       "title": "إدارة الطلبات",
@@ -926,8 +927,8 @@
       "itemsSummary": "{{itemCount}} منتج / {{unitCount}} وحدة",
       "chatAvailableMessage": "دردشة الدعم متاحة خلال ساعات العمل.",
       "chatLinkedMessage": "الرسائل مرتبطة بسجل كل طلب.",
-      "printBlocked": "Pop-up blocked. Please allow pop-ups to print.",
-      "printLabel": "Print Shipping Label"
+      "printBlocked": "تم حظر النافذة المنبثقة. يرجى السماح بالنوافذ المنبثقة للطباعة.",
+      "printLabel": "طباعة ملصق الشحن"
     },
     "settings": {
       "title": "إعدادات الحساب",
@@ -963,32 +964,32 @@
       "passwordUpdateFailed": "فشل تحديث كلمة المرور",
       "invalidIban": "يرجى إدخال رقم آيبان سعودي صحيح (SA متبوعًا بـ 22 رقمًا).",
       "invalidSwift": "يرجى إدخال رمز SWIFT صحيح (8 أو 11 حرفًا).",
-      "paymentSettings": "Payment Settings",
-      "kycDocuments": "KYC Documents",
-      "paymentSaved": "Payment settings saved",
-      "paymentSaveFailed": "Failed to save payment settings",
-      "fileTooLarge": "File must be under 10MB",
-      "fileUploaded": "Document uploaded successfully",
-      "uploadFailed": "Failed to upload document",
-      "kycDocumentsDesc": "Upload your business documents for verification",
-      "commercialRegistration": "Commercial Registration (CR)",
-      "taxCertificate": "VAT/Tax Certificate",
-      "businessLicense": "Business License",
-      "bankLetter": "Bank Account Letter",
-      "uploaded": "Uploaded",
-      "uploadPdf": "Upload PDF or image",
-      "uploading": "Uploading...",
-      "replace": "Replace File",
-      "chooseFile": "Choose File",
-      "paymentSettingsDesc": "Configure your bank account for receiving payouts",
-      "bankName": "Bank Name",
-      "bankNamePlaceholder": "e.g. Al Rajhi Bank",
-      "accountHolder": "Account Holder Name",
-      "accountHolderPlaceholder": "Full name as on bank account",
+      "paymentSettings": "إعدادات الدفع",
+      "kycDocuments": "مستندات اعرف عميلك (KYC)",
+      "paymentSaved": "تم حفظ إعدادات الدفع",
+      "paymentSaveFailed": "فشل حفظ إعدادات الدفع",
+      "fileTooLarge": "يجب أن يكون حجم الملف أقل من 10 ميجابايت",
+      "fileUploaded": "تم رفع المستند بنجاح",
+      "uploadFailed": "فشل رفع المستند",
+      "kycDocumentsDesc": "ارفع مستندات نشاطك للتحقق",
+      "commercialRegistration": "السجل التجاري (CR)",
+      "taxCertificate": "شهادة ضريبة القيمة المضافة",
+      "businessLicense": "رخصة النشاط",
+      "bankLetter": "خطاب الحساب البنكي",
+      "uploaded": "تم الرفع",
+      "uploadPdf": "ارفع ملف PDF أو صورة",
+      "uploading": "جارٍ الرفع...",
+      "replace": "استبدال الملف",
+      "chooseFile": "اختيار ملف",
+      "paymentSettingsDesc": "قم بإعداد حسابك البنكي لاستلام المدفوعات",
+      "bankName": "اسم البنك",
+      "bankNamePlaceholder": "مثال: مصرف الراجحي",
+      "accountHolder": "اسم صاحب الحساب",
+      "accountHolderPlaceholder": "الاسم الكامل كما هو في الحساب البنكي",
       "iban": "IBAN",
       "ibanPlaceholder": "SA...",
-      "swiftCode": "SWIFT/BIC Code",
-      "swiftPlaceholder": "e.g. RJHISARI"
+      "swiftCode": "رمز SWIFT/BIC",
+      "swiftPlaceholder": "مثال: RJHISARI"
     },
     "fallback": {
       "comingSoon": "القسم قريباً",
@@ -1049,30 +1050,30 @@
       "listingAgreement": "بإدراج هذا المنتج، فإنك توافق على تنفيذ الطلبات باستخدام أوصاف المنتج الرئيسية والصور والمواصفات الفنية المقدمة من مشرف السوق.",
       "saveAndList": "حفظ وإدراج المنتج",
       "masterId": "المعرف الرئيسي: {{id}}",
-      "productListTitle": "Master Product List",
-      "sortNewest": "Newest Added",
-      "sortName": "Product Name (A-Z)",
-      "standardLeadTime": "Standard Lead Time: 3-5 Days"
+      "productListTitle": "قائمة منتجات الفهرس الرئيسي",
+      "sortNewest": "الأحدث إضافة",
+      "sortName": "اسم المنتج (أ-ي)",
+      "standardLeadTime": "مدة تجهيز قياسية: 3-5 أيام"
     },
     "customRequests": {
-      "title": "Custom Requests",
-      "subtitle": "Custom item requests assigned to you by the platform",
-      "noRequests": "No custom requests assigned",
-      "noRequestsDesc": "When the platform assigns custom item requests to you, they will appear here.",
-      "platformNotes": "Platform Notes"
+      "title": "الطلبات المخصصة",
+      "subtitle": "طلبات منتجات مخصصة مسندة إليك من المنصة",
+      "noRequests": "لا توجد طلبات مخصصة مسندة",
+      "noRequestsDesc": "عند إسناد طلبات منتجات مخصصة إليك من المنصة، ستظهر هنا.",
+      "platformNotes": "ملاحظات المنصة"
     },
     "inventory": {
-      "loadError": "Failed to load inventory",
-      "updateSuccess": "Stock updated successfully",
-      "updateError": "Failed to update stock",
-      "subtitle": "Manage your product stock levels",
-      "searchPlaceholder": "Search products...",
-      "product": "Product",
+      "loadError": "فشل تحميل المخزون",
+      "updateSuccess": "تم تحديث المخزون بنجاح",
+      "updateError": "فشل تحديث المخزون",
+      "subtitle": "إدارة مستويات مخزون منتجاتك",
+      "searchPlaceholder": "ابحث عن المنتجات...",
+      "product": "المنتج",
       "sku": "SKU",
-      "category": "Category",
-      "currentStock": "Current Stock",
-      "status": "Status",
-      "noProducts": "No products found"
+      "category": "الفئة",
+      "currentStock": "المخزون الحالي",
+      "status": "الحالة",
+      "noProducts": "لا توجد منتجات"
     }
   },
   "admin": {
@@ -2857,11 +2858,11 @@
       "upload": "رفع صورة",
       "remove": "إزالة",
       "fileTooLarge": "حجم الملف كبير جداً (أقصى حد 5 ميجابايت)",
-      "invalidFileType": "Please select an image file",
-      "uploadFailed": "Failed to upload profile picture",
-      "saved": "Profile picture updated",
-      "removeFailed": "Failed to remove profile picture",
-      "removed": "Profile picture removed"
+      "invalidFileType": "يرجى اختيار ملف صورة",
+      "uploadFailed": "فشل رفع صورة الملف الشخصي",
+      "saved": "تم تحديث صورة الملف الشخصي",
+      "removeFailed": "فشل إزالة صورة الملف الشخصي",
+      "removed": "تمت إزالة صورة الملف الشخصي"
     }
   },
   "subcategories": {

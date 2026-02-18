@@ -725,6 +725,7 @@
       "transactionsPrimary": "Transactions",
       "transactionsPrimaryHint": "Completed deliveries are treated as finalized transactions.",
       "pendingPayouts": "Pending Payouts",
+      "pendingPayoutHint": "Payments currently being processed.",
       "pendingPayoutOrders": "{{count}} delivered order(s) within payout window",
       "ratingAndOrders": "Rating & Orders",
       "ordersCount": "{{count}} total order(s)",

@@ -726,36 +726,86 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
       [supplierProducts]
     );
 
+    const normalizeTaxonomyKey = (value: string) =>
+      String(value || '')
+        .toLowerCase()
+        .replace(/&/g, 'and')
+        .replace(/[^a-z0-9]+/g, '')
+        .trim();
+
+    const toCamelCase = (value: string) =>
+      String(value || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+(.)/g, (_, chr: string) => chr.toUpperCase());
+
+    const translateTaxonomyLabel = (label: string, candidateKeys: string[]) => {
+      for (const key of candidateKeys) {
+        if (key && i18n.exists(key)) {
+          return t(key);
+        }
+      }
+      return label;
+    };
+
     // Helper to map category to translation key
     const getCategoryLabel = (cat: string) => {
       if (cat === 'All') return t('common.all');
       const keyMap: Record<string, string> = {
-        'Office': 'office',
+        Office: 'office',
         'IT Supplies': 'itSupplies',
-        'Breakroom': 'breakroom',
-        'Janitorial': 'janitorial',
-        'Maintenance': 'maintenance',
-        'General': 'general'
+        Breakroom: 'breakroom',
+        Janitorial: 'janitorial',
+        Maintenance: 'maintenance',
+        General: 'general',
       };
-      const key = keyMap[cat] || cat.toLowerCase();
-      return t(`categories.${key}.label`, cat);
+      const normalized = normalizeTaxonomyKey(cat);
+      const mapped = keyMap[cat] || normalized;
+
+      return translateTaxonomyLabel(cat, [
+        `categories.${mapped}.label`,
+        `categories.sub.${mapped}`,
+        `categories.office.subcategories.${mapped}.label`,
+        `categories.it.subcategories.${mapped}.label`,
+        `categories.breakroom.subcategories.${mapped}.label`,
+        `categories.janitorial.subcategories.${mapped}.label`,
+        `categories.maintenance.subcategories.${mapped}.label`,
+        `subcategories.office.${toCamelCase(cat)}`,
+        `subcategories.it.${toCamelCase(cat)}`,
+        `subcategories.breakroom.${toCamelCase(cat)}`,
+        `subcategories.janitorial.${toCamelCase(cat)}`,
+        `subcategories.maintenance.${toCamelCase(cat)}`,
+      ]);
     };
 
     // Helper to map subcategory to translation key
     const getSubCategoryLabel = (sub: string) => {
       if (sub === 'All') return t('common.all');
       const keyMap: Record<string, string> = {
-        'All': 'all',
-        'Tools': 'tools',
-        'Electrical': 'electrical',
-        'Plumbing': 'plumbing',
-        'Hardware': 'hardware',
+        All: 'all',
+        Tools: 'tools',
+        Electrical: 'electrical',
+        Plumbing: 'plumbing',
+        Hardware: 'hardware',
         'Safety Equipment': 'safetyEquipment',
-        'Janitorial': 'janitorial'
+        Janitorial: 'janitorial',
       };
-      // fallback for other specific subcategories not yet in sub map: just show them or try a generic key
-      const key = keyMap[sub];
-      return key ? t(`categories.sub.${key}`, sub) : sub;
+      const normalized = normalizeTaxonomyKey(sub);
+      const mapped = keyMap[sub] || normalized;
+      const camel = toCamelCase(sub);
+
+      return translateTaxonomyLabel(sub, [
+        `categories.sub.${mapped}`,
+        `categories.office.subcategories.${mapped}.label`,
+        `categories.it.subcategories.${mapped}.label`,
+        `categories.breakroom.subcategories.${mapped}.label`,
+        `categories.janitorial.subcategories.${mapped}.label`,
+        `categories.maintenance.subcategories.${mapped}.label`,
+        `subcategories.office.${camel}`,
+        `subcategories.it.${camel}`,
+        `subcategories.breakroom.${camel}`,
+        `subcategories.janitorial.${camel}`,
+        `subcategories.maintenance.${camel}`,
+      ]);
     };
 
     let filteredProducts = supplierProducts.filter((product) => {

@@ -38,7 +38,7 @@ const toSafeOrder = (value: string, fallback: number) => {
 };
 
 export const AdminCategoriesView: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const toast = useToast();
 
   const [categories, setCategories] = useState<AdminCategoryNode[]>([]);
@@ -141,6 +141,76 @@ export const AdminCategoriesView: React.FC = () => {
     [visibleCategories]
   );
   const isSearchActive = categorySearchTerm.trim().length > 0;
+
+  const normalizeTaxonomyKey = (value: string) =>
+    String(value || '')
+      .toLowerCase()
+      .replace(/&/g, 'and')
+      .replace(/[^a-z0-9]+/g, '')
+      .trim();
+
+  const toCamelCase = (value: string) =>
+    String(value || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+(.)/g, (_, chr: string) => chr.toUpperCase());
+
+  const translateTaxonomyLabel = (label: string, candidateKeys: string[]) => {
+    for (const key of candidateKeys) {
+      if (key && i18n.exists(key)) {
+        return t(key);
+      }
+    }
+    return label;
+  };
+
+  const getCategoryLabel = (categoryName: string) => {
+    const keyMap: Record<string, string> = {
+      Office: 'office',
+      'IT Supplies': 'itSupplies',
+      Breakroom: 'breakroom',
+      Janitorial: 'janitorial',
+      Maintenance: 'maintenance',
+      General: 'general',
+    };
+
+    const normalized = normalizeTaxonomyKey(categoryName);
+    const mapped = keyMap[categoryName] || normalized;
+
+    return translateTaxonomyLabel(categoryName, [
+      `categories.${mapped}.label`,
+      `categories.sub.${mapped}`,
+      `subcategories.office.${toCamelCase(categoryName)}`,
+      `subcategories.it.${toCamelCase(categoryName)}`,
+      `subcategories.breakroom.${toCamelCase(categoryName)}`,
+      `subcategories.janitorial.${toCamelCase(categoryName)}`,
+      `subcategories.maintenance.${toCamelCase(categoryName)}`,
+    ]);
+  };
+
+  const getSubcategoryLabel = (subcategoryName: string, parentCategoryName: string) => {
+    const normalizedSub = normalizeTaxonomyKey(subcategoryName);
+    const camelSub = toCamelCase(subcategoryName);
+    const normalizedParent = normalizeTaxonomyKey(parentCategoryName);
+    const keyMap: Record<string, string> = {
+      tools: 'tools',
+      electrical: 'electrical',
+      plumbing: 'plumbing',
+      hardware: 'hardware',
+      safetyequipment: 'safetyEquipment',
+      janitorial: 'janitorial',
+    };
+    const mappedSub = keyMap[normalizedSub] || normalizedSub;
+
+    return translateTaxonomyLabel(subcategoryName, [
+      `categories.${normalizedParent}.subcategories.${mappedSub}.label`,
+      `categories.sub.${mappedSub}`,
+      `subcategories.office.${camelSub}`,
+      `subcategories.it.${camelSub}`,
+      `subcategories.breakroom.${camelSub}`,
+      `subcategories.janitorial.${camelSub}`,
+      `subcategories.maintenance.${camelSub}`,
+    ]);
+  };
 
   const resetCategoryDraft = useCallback(() => {
     setNewCategory({
@@ -535,7 +605,7 @@ export const AdminCategoriesView: React.FC = () => {
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-slate-900 truncate">{category.name}</h3>
+                          <h3 className="font-semibold text-slate-900 truncate">{getCategoryLabel(category.name)}</h3>
                           {!category.isActive && (
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
                               {t('common.inactive')}
@@ -589,7 +659,7 @@ export const AdminCategoriesView: React.FC = () => {
                           <span className="material-symbols-outlined text-base">add_circle</span>
                         </button>
                         <button
-                          onClick={() => setDeleteTarget({ id: category.id, name: category.name, type: 'category' })}
+                          onClick={() => setDeleteTarget({ id: category.id, name: getCategoryLabel(category.name), type: 'category' })}
                           disabled={isMutating}
                           className="p-1.5 rounded hover:bg-red-50 text-red-600"
                           aria-label={t('common.delete')}
@@ -619,7 +689,7 @@ export const AdminCategoriesView: React.FC = () => {
                                   <span className="material-symbols-outlined text-sm">{subcategory.icon || 'label'}</span>
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium text-slate-800 truncate">{subcategory.name}</p>
+                                  <p className="text-sm font-medium text-slate-800 truncate">{getSubcategoryLabel(subcategory.name, category.name)}</p>
                                 </div>
                                 {!subcategory.isActive && (
                                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-100 text-amber-700">
@@ -660,7 +730,12 @@ export const AdminCategoriesView: React.FC = () => {
                                     <span className="material-symbols-outlined text-base">edit</span>
                                   </button>
                                   <button
-                                    onClick={() => setDeleteTarget({ id: subcategory.id, name: subcategory.name, type: 'subcategory', parentId: category.id })}
+                                    onClick={() => setDeleteTarget({
+                                      id: subcategory.id,
+                                      name: getSubcategoryLabel(subcategory.name, category.name),
+                                      type: 'subcategory',
+                                      parentId: category.id
+                                    })}
                                     disabled={isMutating}
                                     className="p-1 rounded hover:bg-red-50 text-red-600"
                                     aria-label={t('common.delete')}
@@ -763,7 +838,7 @@ export const AdminCategoriesView: React.FC = () => {
                 >
                   <option value="">{t('common.select')}</option>
                   {categories.map((category) => (
-                    <option key={category.id} value={category.id}>{category.name}</option>
+                    <option key={category.id} value={category.id}>{getCategoryLabel(category.name)}</option>
                   ))}
                 </select>
               </div>
@@ -886,7 +961,7 @@ export const AdminCategoriesView: React.FC = () => {
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#0A2540] focus:ring-2 focus:ring-[#0A2540]/10"
                 >
                   {categories.map((category) => (
-                    <option key={category.id} value={category.id}>{category.name}</option>
+                    <option key={category.id} value={category.id}>{getCategoryLabel(category.name)}</option>
                   ))}
                 </select>
               </div>

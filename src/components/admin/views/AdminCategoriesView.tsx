@@ -190,7 +190,15 @@ export const AdminCategoriesView: React.FC = () => {
   const getSubcategoryLabel = (subcategoryName: string, parentCategoryName: string) => {
     const normalizedSub = normalizeTaxonomyKey(subcategoryName);
     const camelSub = toCamelCase(subcategoryName);
-    const normalizedParent = normalizeTaxonomyKey(parentCategoryName);
+    const parentKeyMap: Record<string, string> = {
+      Office: 'office',
+      'IT Supplies': 'it',
+      Breakroom: 'breakroom',
+      Janitorial: 'janitorial',
+      Maintenance: 'maintenance',
+      General: 'general',
+    };
+    const normalizedParent = parentKeyMap[parentCategoryName] || normalizeTaxonomyKey(parentCategoryName);
     const keyMap: Record<string, string> = {
       tools: 'tools',
       electrical: 'electrical',
@@ -198,6 +206,13 @@ export const AdminCategoriesView: React.FC = () => {
       hardware: 'hardware',
       safetyequipment: 'safetyEquipment',
       janitorial: 'janitorial',
+      cablesandadapters: 'cables',
+      storagedevices: 'storage',
+      cleaningsupplies: 'cleaningsolutions',
+      paperproducts: 'paper',
+      papertowelsandtissues: 'papertowels',
+      trashbags: 'trashbags',
+      disposables: 'disposables',
     };
     const mappedSub = keyMap[normalizedSub] || normalizedSub;
 

@@ -437,6 +437,7 @@
       "rateOrder": "Rate Order",
       "reviewed": "Reviewed",
       "invalidQuoteAmount": "The selected quote has an invalid amount.",
+      "quoteAcceptedSuccess": "Quote accepted. Continue PO submission from Orders when ready.",
       "resumePoMissingQuote": "This order is missing its source quote.",
       "resumePoQuoteNotFound": "Unable to load quote details for this order.",
       "resumePoError": "Failed to continue PO submission",

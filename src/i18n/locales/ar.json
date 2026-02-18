@@ -437,6 +437,7 @@
       "rateOrder": "قيّم الطلب",
       "reviewed": "تم التقييم",
       "invalidQuoteAmount": "عرض السعر المحدد يحتوي على قيمة غير صالحة.",
+      "quoteAcceptedSuccess": "تم قبول العرض. يمكنك متابعة إرسال أمر الشراء من صفحة الطلبات عند الجاهزية.",
       "resumePoMissingQuote": "This order is missing its source quote.",
       "resumePoQuoteNotFound": "Unable to load quote details for this order.",
       "resumePoError": "Failed to continue PO submission",

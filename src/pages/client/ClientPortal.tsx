@@ -464,7 +464,11 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
     setCreatedOrderId(order.id);
     await loadOrders();
     setAcceptedQuote(quoteForFlow as Quote);
-    setShowPOFlow(true);
+    // Accepting a quote should not force-open PO flow.
+    // Clients can continue PO submission from Orders when ready.
+    setShowPOFlow(false);
+    toast.success(t('client.orders.quoteAcceptedSuccess'));
+    onNavigate('orders');
     return true;
   };
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStore } from '../../store/useStore';
-import { CustomItemRequest, CustomRequestStatus } from '../../types/types';
-import { getClientCustomRequests, cancelCustomRequest, getRequestStatusText, getStatusColorClass, getPriorityText, getPriorityColorClass } from '../../services/customItemRequestService';
+import { CustomItemRequest, CustomRequestStatus, RequestPriority } from '../../types/types';
+import { getClientCustomRequests, cancelCustomRequest, getStatusColorClass, getPriorityColorClass } from '../../services/customItemRequestService';
 import { useToast } from '../../hooks/useToast';
 import { logger } from '../../utils/logger';
 
@@ -55,6 +55,31 @@ export const ClientCustomRequestsList: React.FC<ClientCustomRequestsListProps> =
 
   const canCancel = (status: CustomRequestStatus) =>
     status === CustomRequestStatus.PENDING || status === CustomRequestStatus.UNDER_REVIEW;
+
+  const getLocalizedStatusText = (status: CustomRequestStatus) => {
+    const keyByStatus: Record<CustomRequestStatus, string> = {
+      [CustomRequestStatus.PENDING]: 'customRequest.statusPending',
+      [CustomRequestStatus.UNDER_REVIEW]: 'customRequest.statusUnderReview',
+      [CustomRequestStatus.ASSIGNED]: 'customRequest.statusAssigned',
+      [CustomRequestStatus.QUOTED]: 'customRequest.statusQuoted',
+      [CustomRequestStatus.APPROVED]: 'customRequest.statusApproved',
+      [CustomRequestStatus.REJECTED]: 'customRequest.statusRejected',
+      [CustomRequestStatus.CANCELLED]: 'customRequest.statusCancelled',
+    };
+
+    return t(keyByStatus[status]);
+  };
+
+  const getLocalizedPriorityText = (priority: RequestPriority) => {
+    const keyByPriority: Record<RequestPriority, string> = {
+      [RequestPriority.LOW]: 'customRequest.priorityLow',
+      [RequestPriority.MEDIUM]: 'customRequest.priorityMedium',
+      [RequestPriority.HIGH]: 'customRequest.priorityHigh',
+      [RequestPriority.URGENT]: 'customRequest.priorityUrgent',
+    };
+
+    return t(keyByPriority[priority]);
+  };
 
   if (loading) {
     return (
@@ -129,10 +154,10 @@ export const ClientCustomRequestsList: React.FC<ClientCustomRequestsListProps> =
                 </div>
                 <div className="flex items-center gap-3">
                   <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${getPriorityColorClass(req.priority)}`}>
-                    {getPriorityText(req.priority)}
+                    {getLocalizedPriorityText(req.priority)}
                   </span>
                   <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${getStatusColorClass(req.status)}`}>
-                    {getRequestStatusText(req.status)}
+                    {getLocalizedStatusText(req.status)}
                   </span>
                   <span className="material-symbols-outlined text-gray-400">
                     {expandedId === req.id ? 'expand_less' : 'expand_more'}

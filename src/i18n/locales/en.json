@@ -2623,7 +2623,14 @@
     "qty": "Qty",
     "deadline": "Deadline",
     "rejectionReason": "Rejection Reason",
-    "cancelRequest": "Cancel Request"
+    "cancelRequest": "Cancel Request",
+    "statusPending": "Pending Review",
+    "statusUnderReview": "Under Review",
+    "statusAssigned": "Assigned to Supplier",
+    "statusQuoted": "Quote Received",
+    "statusApproved": "Approved",
+    "statusRejected": "Rejected",
+    "statusCancelled": "Cancelled"
   },
   "paymentHistory": {
     "totalPaid": "Total Paid",

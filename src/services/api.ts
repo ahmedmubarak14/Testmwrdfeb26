@@ -2010,6 +2010,11 @@ export class ApiService {
         ? value as Record<string, any>
         : null
     );
+    const asRecordArray = (value: unknown): Record<string, any>[] => (
+      Array.isArray(value)
+        ? value.filter((item) => item && typeof item === 'object' && !Array.isArray(item)) as Record<string, any>[]
+        : []
+    );
 
     const looksLikeOrderRow = (value: Record<string, any>): boolean => (
       typeof value.id === 'string'
@@ -2023,6 +2028,30 @@ export class ApiService {
       )
     );
 
+    const rpcArray = asRecordArray(rpcResult);
+    if (rpcArray.length > 0) {
+      const firstOrderLike = rpcArray.find((entry) => looksLikeOrderRow(entry));
+      if (firstOrderLike) {
+        return this.mapDbOrderToOrder(firstOrderLike);
+      }
+
+      const firstRecord = rpcArray[0];
+      const firstOrderId = firstRecord?.order_id ?? firstRecord?.orderId ?? firstRecord?.id;
+      if (typeof firstOrderId === 'string' && firstOrderId.trim().length > 0) {
+        const order = await this.getOrderById(firstOrderId);
+        if (order) {
+          return order;
+        }
+      }
+    }
+
+    if (typeof rpcResult === 'string' && rpcResult.trim().length > 0) {
+      const order = await this.getOrderById(rpcResult);
+      if (order) {
+        return order;
+      }
+    }
+
     const rpcRecord = asRecord(rpcResult);
     if (!rpcRecord) {
       return this.getLatestOrderForQuote(quoteId);
@@ -2035,6 +2064,17 @@ export class ApiService {
     const nestedOrderRecord = asRecord(rpcRecord.order);
     if (nestedOrderRecord && looksLikeOrderRow(nestedOrderRecord)) {
       return this.mapDbOrderToOrder(nestedOrderRecord);
+    }
+
+    const nestedDataRecord = asRecord(rpcRecord.data);
+    if (nestedDataRecord && looksLikeOrderRow(nestedDataRecord)) {
+      return this.mapDbOrderToOrder(nestedDataRecord);
+    }
+
+    const nestedDataArray = asRecordArray(rpcRecord.data);
+    const dataArrayOrderLike = nestedDataArray.find((entry) => looksLikeOrderRow(entry));
+    if (dataArrayOrderLike) {
+      return this.mapDbOrderToOrder(dataArrayOrderLike);
     }
 
     const orderId = rpcRecord.order_id ?? rpcRecord.orderId;

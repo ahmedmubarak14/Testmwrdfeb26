@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mockContext = vi.hoisted(() => {
   const state = {
     activeAuthUserId: 'client-1',
-    acceptQuoteRpcResultMode: 'ORDER_ROW' as 'ORDER_ROW' | 'JSONB_WITH_ORDER_ID',
+    acceptQuoteRpcResultMode: 'ORDER_ROW' as 'ORDER_ROW' | 'JSONB_WITH_ORDER_ID' | 'ORDER_ARRAY',
     users: [] as Array<{ id: string; role: string }>,
     quotes: [] as Array<Record<string, any>>,
     orders: [] as Array<Record<string, any>>,
@@ -193,6 +193,9 @@ const mockContext = vi.hoisted(() => {
             error: null,
           };
         }
+        if (state.acceptQuoteRpcResultMode === 'ORDER_ARRAY') {
+          return { data: [order], error: null };
+        }
         return { data: order, error: null };
       }
 
@@ -335,6 +338,17 @@ describe('RFQ -> Quote -> Order -> Payment confirmation integration', () => {
 
   it('accepts quotes when RPC returns a JSON payload with order_id', async () => {
     mockContext.state.acceptQuoteRpcResultMode = 'JSONB_WITH_ORDER_ID';
+
+    const accepted = await api.acceptQuote('quote-1');
+
+    expect(accepted.quote?.status).toBe('ACCEPTED');
+    expect(accepted.order?.id).toBeTruthy();
+    expect(accepted.order?.quoteId).toBe('quote-1');
+    expect(accepted.order?.status).toBe('PENDING_PAYMENT');
+  });
+
+  it('accepts quotes when RPC returns an array payload', async () => {
+    mockContext.state.acceptQuoteRpcResultMode = 'ORDER_ARRAY';
 
     const accepted = await api.acceptQuote('quote-1');
 

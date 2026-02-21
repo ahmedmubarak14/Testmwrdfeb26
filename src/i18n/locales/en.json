@@ -437,6 +437,8 @@
       "noOrdersForFilter": "No orders match the selected filters.",
       "rateOrder": "Rate Order",
       "reviewed": "Reviewed",
+      "createSuccess": "Order submitted successfully!",
+      "createError": "Failed to initialize order",
       "invalidQuoteAmount": "The selected quote has an invalid amount.",
       "quoteAcceptedSuccess": "Quote accepted. Continue PO submission from Orders when ready.",
       "resumePoMissingQuote": "This order is missing its source quote.",

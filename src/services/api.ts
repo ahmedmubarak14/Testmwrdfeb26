@@ -3457,6 +3457,8 @@ export class ApiService {
       [OrderStatus.COMPLETED]: OrderStatus.DELIVERED,
       [OrderStatus.DISPUTED]: OrderStatus.CANCELLED,
       [OrderStatus.REFUNDED]: OrderStatus.CANCELLED,
+      // The DB enum uses PENDING_PO; the app model uses PENDING_ADMIN_CONFIRMATION
+      [OrderStatus.PENDING_ADMIN_CONFIRMATION]: 'PENDING_PO' as DbOrderStatus,
     };
 
     return mappedStatuses[normalized] || normalized;

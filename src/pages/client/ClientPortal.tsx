@@ -2595,6 +2595,25 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
             }}
           />
         )}
+
+        {/* Dual PO Flow Modal — must live here so it renders while on the orders tab */}
+        {showPOFlow && acceptedQuote && createdOrderId && (
+          <DualPOFlow
+            orderId={createdOrderId}
+            quoteId={acceptedQuote.id}
+            onComplete={() => {
+              setShowPOFlow(false);
+              setAcceptedQuote(null);
+              setCreatedOrderId(null);
+              toast.success(t('client.orders.createSuccess') || 'Order submitted successfully!');
+            }}
+            onCancel={() => {
+              setShowPOFlow(false);
+              setAcceptedQuote(null);
+              setCreatedOrderId(null);
+            }}
+          />
+        )}
       </div>
     );
   }

@@ -3,7 +3,7 @@ import { OrderStatus } from '../types/types';
 const ORDER_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   [OrderStatus.PENDING_ADMIN_CONFIRMATION]: [OrderStatus.CONFIRMED, OrderStatus.CANCELLED],
   [OrderStatus.CONFIRMED]: [OrderStatus.PENDING_PAYMENT, OrderStatus.AWAITING_CONFIRMATION, OrderStatus.PAYMENT_CONFIRMED, OrderStatus.PROCESSING, OrderStatus.CANCELLED],
-  [OrderStatus.PENDING_PAYMENT]: [OrderStatus.AWAITING_CONFIRMATION, OrderStatus.PAYMENT_CONFIRMED, OrderStatus.CANCELLED],
+  [OrderStatus.PENDING_PAYMENT]: [OrderStatus.PENDING_ADMIN_CONFIRMATION, OrderStatus.AWAITING_CONFIRMATION, OrderStatus.PAYMENT_CONFIRMED, OrderStatus.CANCELLED],
   [OrderStatus.AWAITING_CONFIRMATION]: [OrderStatus.PENDING_PAYMENT, OrderStatus.PAYMENT_CONFIRMED, OrderStatus.CANCELLED],
   [OrderStatus.PAYMENT_CONFIRMED]: [
     OrderStatus.PROCESSING,

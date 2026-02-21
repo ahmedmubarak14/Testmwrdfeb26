@@ -18,23 +18,16 @@ interface DualPOFlowProps {
 export const DualPOFlow: React.FC<DualPOFlowProps> = ({ orderId, quoteId, onComplete, onCancel }) => {
   const { t } = useTranslation();
   const toast = useToast();
-  const {
-    currentUser,
-    orders,
-    quotes,
-    rfqs,
-    products,
-    updateOrder,
-    addNotification,
-  } = useStore((state) => ({
-    currentUser: state.currentUser,
-    orders: state.orders,
-    quotes: state.quotes,
-    rfqs: state.rfqs,
-    products: state.products,
-    updateOrder: state.updateOrder,
-    addNotification: state.addNotification,
-  }));
+
+  // Use individual selectors to avoid returning a new object on every render
+  // (which causes "Maximum update depth exceeded" / infinite re-render loop).
+  const currentUser = useStore((state) => state.currentUser);
+  const orders = useStore((state) => state.orders);
+  const quotes = useStore((state) => state.quotes);
+  const rfqs = useStore((state) => state.rfqs);
+  const products = useStore((state) => state.products);
+  const updateOrder = useStore((state) => state.updateOrder);
+  const addNotification = useStore((state) => state.addNotification);
 
   const [step, setStep] = useState<'confirmation' | 'download' | 'upload' | 'pending'>('confirmation');
   const [uploading, setUploading] = useState(false);
@@ -96,7 +89,6 @@ export const DualPOFlow: React.FC<DualPOFlowProps> = ({ orderId, quoteId, onComp
       });
 
       await updateOrder(orderId, {
-        status: OrderStatus.PENDING_ADMIN_CONFIRMATION,
         not_test_order_confirmed_at: confirmationTimestamp,
         payment_terms_confirmed_at: confirmationTimestamp,
         client_po_confirmation_submitted_at: confirmationTimestamp,

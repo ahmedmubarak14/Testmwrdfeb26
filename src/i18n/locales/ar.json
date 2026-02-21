@@ -237,13 +237,13 @@
       "name": "الاسم مطلوب",
       "invalidAccountType": "يرجى اختيار نوع حساب صحيح",
       "submitFailed": "فشل إرسال الطلب. يرجى المحاولة مرة أخرى.",
-      "cr": "CR number is required",
-      "taxId": "Tax ID is required"
+      "cr": "السجل التجاري مطلوب",
+      "taxId": "الرقم الضريبي مطلوب"
     },
-    "commercialRegistration": "Commercial Registration (CR)",
-    "crPlaceholder": "e.g. 1010XXXXXX",
-    "taxId": "Tax ID (VAT Number)",
-    "taxIdPlaceholder": "e.g. 3XXXXXXXXXX0003"
+    "commercialRegistration": "السجل التجاري (CR)",
+    "crPlaceholder": "مثال: 1010XXXXXX",
+    "taxId": "الرقم الضريبي (VAT)",
+    "taxIdPlaceholder": "مثال: 3XXXXXXXXXX0003"
   },
   "sidebar": {
     "clientPortal": "بوابة العميل",

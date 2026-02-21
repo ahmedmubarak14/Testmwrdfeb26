@@ -185,7 +185,7 @@ BEGIN
     v_quote.client_id,
     v_quote.supplier_id,
     v_total_amount,
-    'PENDING_PAYMENT',
+    'PENDING_PO',
     CURRENT_DATE
   )
   RETURNING * INTO v_order;

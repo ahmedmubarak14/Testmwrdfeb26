@@ -430,6 +430,53 @@ export const orderDocumentService = {
     },
 
     /**
+     * Admin: Verify documentless PO
+     */
+    async verifyOrderPO(orderId: string): Promise<void> {
+        try {
+            const { data: authData } = await supabase.auth.getUser();
+            const adminId = authData.user?.id;
+            if (!adminId) throw new Error('Not authenticated');
+
+            const nowIso = new Date().toISOString();
+            const { error: updateOrderError } = await supabase
+                .from('orders')
+                .update({
+                    status: 'PENDING_PAYMENT',
+                    admin_verified: true,
+                    admin_verified_by: adminId,
+                    admin_verified_at: nowIso,
+                    updated_at: nowIso,
+                })
+                .eq('id', orderId);
+
+            if (updateOrderError) {
+                if (/invalid input value for enum/i.test(updateOrderError.message || '')) {
+                    const fallbackOrderUpdateError = await supabase
+                        .from('orders')
+                        .update({
+                            status: 'CONFIRMED',
+                            admin_verified: true,
+                            admin_verified_by: adminId,
+                            admin_verified_at: nowIso,
+                            updated_at: nowIso,
+                        })
+                        .eq('id', orderId);
+
+                    if (fallbackOrderUpdateError.error) {
+                        throw fallbackOrderUpdateError.error;
+                    }
+                } else {
+                    throw updateOrderError;
+                }
+            }
+        } catch (error) {
+            logger.error('Error verifying order PO:', error);
+            throw error;
+        }
+    },
+
+    /**
      * Download a document (returns blob URL)
      */
     async downloadDocument(filePath: string): Promise<Blob> {

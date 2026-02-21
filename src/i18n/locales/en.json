@@ -103,7 +103,8 @@
     "nextPage": "Next page is not available yet",
     "category": "Category",
     "apply": "Apply",
-    "days": "days"
+    "days": "days",
+    "done": "Done"
   },
   "about": {
     "clients": {
@@ -554,7 +555,8 @@
       "reviewQuotes": "Review Quotes",
       "noQuotes": "No Quotes",
       "awaitingSuppliers": "Awaiting Suppliers",
-      "actionRequired": "Action Required"
+      "actionRequired": "Action Required",
+      "orderConfirmed": "Order Confirmed"
     },
     "settings": {
       "title": "Account Settings",
@@ -621,7 +623,8 @@
       "confirmationSubmitError": "Failed to submit confirmation",
       "orderDetailsNotFound": "Could not find order details",
       "pendingAdminTitle": "PO Pending Verification",
-      "pendingAdminMessage": "Your PO is pending verification. MWRD will confirm within 24 hours."
+      "pendingAdminMessage": "Your PO is pending verification. MWRD will confirm within 24 hours.",
+      "pendingAdminReview": "Pending MWRD team verification"
     },
     "invoices": {
       "title": "Invoices",
@@ -2080,7 +2083,7 @@
     "draft": "Draft",
     "submitted": "Submitted",
     "underReview": "Under Review",
-    "pending_admin_confirmation": "Pending Admin Confirmation",
+    "pending_admin_confirmation": "Pending MWRD Team Verification",
     "pendingPO": "Pending PO",
     "readyForPickup": "Ready for Pickup",
     "pickupScheduled": "Pickup Scheduled",

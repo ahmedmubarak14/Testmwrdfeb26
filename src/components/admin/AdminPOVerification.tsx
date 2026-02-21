@@ -9,7 +9,7 @@ import { logger } from '../../utils/logger';
 import { UserRole } from '../../types/types';
 
 interface PendingPO {
-    document: OrderDocument;
+    document?: OrderDocument;
     order: {
         id: string;
         clientId: string;
@@ -61,20 +61,18 @@ export const AdminPOVerification: React.FC = () => {
                         (document) => !document.verified_at && !document.verified_by
                     ) || clientPODocuments[0];
 
-                    if (clientPO) {
-                        const client = users.find(u => u.id === order.clientId);
-                        pending.push({
-                            document: clientPO,
-                            order: {
-                                id: order.id,
-                                clientId: order.clientId,
-                                amount: order.amount,
-                                date: order.date,
-                                status: String(order.status)
-                            },
-                            clientName: client?.companyName || client?.name || t('admin.overview.unknownClient')
-                        });
-                    }
+                    const client = users.find(u => u.id === order.clientId);
+                    pending.push({
+                        document: clientPO,
+                        order: {
+                            id: order.id,
+                            clientId: order.clientId,
+                            amount: order.amount,
+                            date: order.date,
+                            status: String(order.status)
+                        },
+                        clientName: client?.companyName || client?.name || t('admin.overview.unknownClient')
+                    });
                 } catch (err) {
                     logger.error(`Error loading docs for order ${order.id}:`, err);
                 }
@@ -98,17 +96,21 @@ export const AdminPOVerification: React.FC = () => {
         void Promise.allSettled([loadOrders(), loadUsers()]);
     }, [currentUser?.id, currentUser?.role, loadOrders, loadUsers]);
 
-    const handleVerify = async (documentId: string) => {
+    const handleVerify = async (orderId: string) => {
         if (!currentUser) return;
 
         try {
-            setVerifying(documentId);
-            const pendingPo = pendingPOs.find((item) => item.document.id === documentId);
+            setVerifying(orderId);
+            const pendingPo = pendingPOs.find((item) => item.order.id === orderId);
             if (!pendingPo) {
                 throw new Error('Pending PO not found');
             }
 
-            await orderDocumentService.verifyClientPO(documentId);
+            if (pendingPo.document) {
+                await orderDocumentService.verifyClientPO(pendingPo.document.id);
+            } else {
+                await orderDocumentService.verifyOrderPO(orderId);
+            }
 
             addNotification({
                 type: 'order',
@@ -120,7 +122,7 @@ export const AdminPOVerification: React.FC = () => {
             // PO audit log
             await logPOAudit({
                 orderId: pendingPo.order.id,
-                documentId,
+                documentId: pendingPo.document?.id,
                 actorUserId: currentUser.id,
                 actorRole: UserRole.ADMIN,
                 action: 'PO_VERIFIED',
@@ -131,7 +133,7 @@ export const AdminPOVerification: React.FC = () => {
             showSuccessToast(t('admin.po.verifySuccess') || 'PO confirmed successfully');
 
             // Remove from pending list
-            setPendingPOs(prev => prev.filter(p => p.document.id !== documentId));
+            setPendingPOs(prev => prev.filter(p => p.order.id !== orderId));
             setPreviewUrl(null);
             setSelectedDoc(null);
         } catch (error) {
@@ -147,8 +149,8 @@ export const AdminPOVerification: React.FC = () => {
         setPreviewUrl(doc.file_url);
     };
 
-    const handleReject = async (documentId: string) => {
-        const matchingPendingPO = pendingPOs.find((pending) => pending.document.id === documentId);
+    const handleReject = async (orderId: string) => {
+        const matchingPendingPO = pendingPOs.find((pending) => pending.order.id === orderId);
         if (!matchingPendingPO) return;
         setPendingRejection(matchingPendingPO);
     };
@@ -157,7 +159,7 @@ export const AdminPOVerification: React.FC = () => {
         if (!currentUser || !pendingRejection) return;
 
         try {
-            setVerifying(pendingRejection.document.id);
+            setVerifying(pendingRejection.order.id);
             const updatedOrder = await updateOrder(pendingRejection.order.id, { status: 'CANCELLED' as any });
             if (!updatedOrder) {
                 throw new Error('Failed to cancel order');
@@ -166,7 +168,7 @@ export const AdminPOVerification: React.FC = () => {
             // PO audit log
             await logPOAudit({
                 orderId: pendingRejection.order.id,
-                documentId: pendingRejection.document.id,
+                documentId: pendingRejection.document?.id,
                 actorUserId: currentUser.id,
                 actorRole: UserRole.ADMIN,
                 action: 'PO_REJECTED',
@@ -175,7 +177,7 @@ export const AdminPOVerification: React.FC = () => {
 
             await loadOrders();
             showSuccessToast(t('admin.po.rejectSuccess') || 'PO rejected and order cancelled');
-            setPendingPOs(prev => prev.filter(p => p.document.id !== pendingRejection.document.id));
+            setPendingPOs(prev => prev.filter(p => p.order.id !== pendingRejection.order.id));
             setPreviewUrl(null);
             setSelectedDoc(null);
             setPendingRejection(null);
@@ -236,12 +238,12 @@ export const AdminPOVerification: React.FC = () => {
                     <div className="space-y-3">
                         {pendingPOs.map((item) => (
                             <div
-                                key={item.document.id}
-                                className={`bg-white rounded-xl border p-4 cursor-pointer transition-all ${selectedDoc?.id === item.document.id
+                                key={item.order.id}
+                                className={`bg-white rounded-xl border p-4 cursor-pointer transition-all ${selectedDoc?.id === item.document?.id && item.document
                                     ? 'border-blue-500 ring-2 ring-blue-100'
                                     : 'border-neutral-200 hover:border-neutral-300'
                                     }`}
-                                onClick={() => handlePreview(item.document)}
+                                onClick={() => item.document ? handlePreview(item.document) : null}
                             >
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-start gap-3">
@@ -258,7 +260,7 @@ export const AdminPOVerification: React.FC = () => {
                                                 Order #{item.order.id.slice(0, 8).toUpperCase()}
                                             </p>
                                             <p className="text-sm text-neutral-500">
-                                                {new Date(item.document.created_at).toLocaleDateString()}
+                                                {new Date((item.document?.created_at) || item.order.date).toLocaleDateString()}
                                             </p>
                                         </div>
                                     </div>
@@ -274,12 +276,12 @@ export const AdminPOVerification: React.FC = () => {
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleVerify(item.document.id);
+                                            handleVerify(item.order.id);
                                         }}
-                                        disabled={verifying === item.document.id}
+                                        disabled={verifying === item.order.id}
                                         className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 flex items-center justify-center gap-2"
                                     >
-                                        {verifying === item.document.id ? (
+                                        {verifying === item.order.id ? (
                                             <>
                                                 <span className="animate-spin material-symbols-outlined text-sm">hourglass_empty</span>
                                                 {t('common.verifying') || 'Verifying...'}
@@ -294,12 +296,12 @@ export const AdminPOVerification: React.FC = () => {
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleReject(item.document.id);
+                                            handleReject(item.order.id);
                                         }}
-                                        disabled={verifying === item.document.id}
+                                        disabled={verifying === item.order.id}
                                         className="px-4 py-2 bg-red-50 text-red-600 rounded-lg font-medium hover:bg-red-100 disabled:opacity-50 flex items-center justify-center gap-2"
                                     >
-                                        {verifying === item.document.id ? (
+                                        {verifying === item.order.id ? (
                                             <>
                                                 <span className="animate-spin material-symbols-outlined text-sm">hourglass_empty</span>
                                                 {t('common.processing') || 'Processing...'}
@@ -364,7 +366,7 @@ export const AdminPOVerification: React.FC = () => {
                 message={t('admin.po.confirmReject') || 'Reject this PO and cancel the related order?'}
                 confirmText={t('admin.po.reject') || 'Reject'}
                 type="danger"
-                isLoading={Boolean(pendingRejection && verifying === pendingRejection.document.id)}
+                isLoading={Boolean(pendingRejection && verifying === pendingRejection.order.id)}
             />
         </div>
     );

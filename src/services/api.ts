@@ -3186,7 +3186,7 @@ export class ApiService {
       };
     };
 
-    let orderInsertResult = await insertOrderWithCompat('PENDING_ADMIN_CONFIRMATION');
+    let orderInsertResult = await insertOrderWithCompat('PENDING_PO');
 
     if (orderInsertResult.error && /invalid input value for enum/i.test(orderInsertResult.error.message || '')) {
       orderInsertResult = await insertOrderWithCompat('PENDING_PAYMENT');

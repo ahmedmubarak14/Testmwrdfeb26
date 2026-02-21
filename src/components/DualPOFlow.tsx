@@ -4,6 +4,7 @@ import { useStore } from '../store/useStore';
 import { useToast } from '../hooks/useToast';
 import { logger } from '../utils/logger';
 import { poConfirmationService } from '../services/poConfirmationService';
+import { OrderStatus } from '../types/types';
 
 interface DualPOFlowProps {
   orderId: string;
@@ -61,6 +62,7 @@ export const DualPOFlow: React.FC<DualPOFlowProps> = ({ orderId, quoteId, onComp
       });
 
       await updateOrder(orderId, {
+        status: OrderStatus.PENDING_ADMIN_CONFIRMATION,
         not_test_order_confirmed_at: confirmationTimestamp,
         payment_terms_confirmed_at: confirmationTimestamp,
         client_po_confirmation_submitted_at: confirmationTimestamp,

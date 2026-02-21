@@ -621,7 +621,8 @@
       "confirmationSubmitError": "فشل إرسال التأكيد",
       "orderDetailsNotFound": "تعذر العثور على تفاصيل الطلب",
       "pendingAdminTitle": "أمر الشراء بانتظار التحقق",
-      "pendingAdminMessage": "أمر الشراء بانتظار التحقق. ستؤكد MWRD خلال 24 ساعة."
+      "pendingAdminMessage": "أمر الشراء بانتظار التحقق. ستؤكد MWRD خلال 24 ساعة.",
+      "pendingAdminReview": "بانتظار تحقق فريق MWRD"
     },
     "invoices": {
       "title": "الفواتير",
@@ -2080,7 +2081,7 @@
     "draft": "مسودة",
     "submitted": "تم الإرسال",
     "underReview": "قيد المراجعة",
-    "pending_admin_confirmation": "بانتظار تأكيد الإدارة",
+    "pending_admin_confirmation": "بانتظار تحقق فريق MWRD",
     "pendingPO": "بانتظار أمر الشراء",
     "readyForPickup": "جاهز للاستلام",
     "pickupScheduled": "تم جدولة الاستلام",

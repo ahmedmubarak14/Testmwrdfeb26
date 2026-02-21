@@ -455,14 +455,36 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
     }
 
     const { order } = await api.acceptQuote(quoteId);
+    let resolvedOrder = order;
 
-    if (!order) {
+    if (!resolvedOrder && currentUser?.id) {
+      try {
+        const recentOrders = await api.getOrders({ clientId: currentUser.id }, { page: 1, pageSize: 200 });
+        resolvedOrder = recentOrders.find((entry) => entry.quoteId === quoteId) || null;
+      } catch (resolveError) {
+        logger.warn('Quote acceptance succeeded but order lookup fallback failed', {
+          quoteId,
+          error: resolveError instanceof Error ? resolveError.message : String(resolveError),
+        });
+      }
+    }
+
+    if (!resolvedOrder) {
       toast.error(t('client.orders.createError') || 'Failed to initialize order');
       return false;
     }
 
-    setCreatedOrderId(order.id);
-    await loadOrders();
+    setCreatedOrderId(resolvedOrder.id);
+    try {
+      await loadOrders();
+    } catch (loadOrdersError) {
+      // Order creation already succeeded; do not block flow on a refresh failure.
+      logger.warn('Order refresh failed after quote acceptance', {
+        quoteId,
+        orderId: resolvedOrder.id,
+        error: loadOrdersError instanceof Error ? loadOrdersError.message : String(loadOrdersError),
+      });
+    }
     setAcceptedQuote(quoteForFlow as Quote);
     // Accepting a quote should not force-open PO flow.
     // Clients can continue PO submission from Orders when ready.

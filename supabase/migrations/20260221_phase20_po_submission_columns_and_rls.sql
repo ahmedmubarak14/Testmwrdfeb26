@@ -43,9 +43,9 @@ CREATE POLICY "Clients can update own PO fields"
   USING  (auth.uid() = client_id)
   WITH CHECK (
     auth.uid() = client_id
-    -- Prevent status escalation by clients
-    AND status = OLD.status
+    AND status::text IN ('PENDING_PAYMENT', 'PENDING_PO', 'AWAITING_CONFIRMATION')
   );
+
 
 -- ============================================================================
 -- 3. Also ensure clients can INSERT their own orders
